@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>test</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.0/lib/index.css">
+    <link rel="stylesheet" href="./swiper.css">
+    <script type="text/javascript" src="./swiper.js"></script>
+    <style>
+	.main-info{
+		/*border-left: .01rem solid #ccc;
+	    border-right: .01rem solid #ccc;*/
+	    /*outline: .01rem solid #ccc;*/
+	    /*width: 96vw;*/
+	    margin: .15rem .15rem 0;	
+	}
+    .info-head,.info-item-con  {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .info-head {
+        height: .5rem;
+        font-size: .25rem;
+        margin-bottom: .02rem;
+    }
+
+    .info-head-wait {
+    	display: flex;
+	    justify-content: center;
+	    align-items: center;
+        background: rgb(33, 117, 194);
+		background: -moz-linear-gradient(270deg, rgb(33, 117, 194) 30%, rgb(41, 143, 235) 70%);
+		background: -webkit-linear-gradient(270deg, rgb(33, 117, 194) 30%, rgb(41, 143, 235) 70%);
+		background: -o-linear-gradient(270deg, rgb(33, 117, 194) 30%, rgb(41, 143, 235) 70%);
+		background: -ms-linear-gradient(270deg, rgb(33, 117, 194) 30%, rgb(41, 143, 235) 70%);
+		background: linear-gradient(0deg, rgb(33, 117, 194) 30%, rgb(41, 143, 235) 70%);
+        color: #ffffff;
+        flex-grow: 1;
+        flex-shrink: 0;
+        height: 100%;
+        /*border-bottom: .03rem solid #ffffff;
+        border-right: .01rem solid #fff;*/
+    }
+    .info-head-pass{
+    	display: flex;
+	    justify-content: center;
+	    align-items: center;
+    	background: rgb(12, 145, 156);
+		background: -moz-linear-gradient(270deg, rgb(12, 145, 156) 30%, rgb(25, 186, 199) 70%);
+		background: -webkit-linear-gradient(270deg, rgb(12, 145, 156) 30%, rgb(25, 186, 199) 70%);
+		background: -o-linear-gradient(270deg, rgb(12, 145, 156) 30%, rgb(25, 186, 199) 70%);
+		background: -ms-linear-gradient(270deg, rgb(12, 145, 156) 30%, rgb(25, 186, 199) 70%);
+		background: linear-gradient(0deg, rgb(12, 145, 156) 30%, rgb(25, 186, 199) 70%);
+    	color: #ffffff;
+    	flex-grow: 1;
+        flex-shrink: 0;
+    	height: 100%;
+	    /*border-bottom: .03rem solid #ffffff;*/
+    }
+
+    
+
+    .item-wait {
+    	align-self: start;
+    	font-size: .21rem;
+        color: #547690;
+        flex-grow: 1;
+        flex-shrink: 0;
+        text-align: center;
+        /*width: 50%;*/
+        /*border-right: .01rem solid #fff;*/
+    }
+    .item-wait > div{
+    	height: .4rem;
+    	line-height: .4rem;
+    	background-color: #E0F0FD;
+    }
+    .item-wait > div:not(:last-child){
+    	/*border-bottom: .03rem solid #ffffff;*/
+    	margin-bottom: .02rem;
+    }
+
+    .item-pass {
+    	font-size: .21rem;
+		color: #3C7A79;
+        flex-grow: 1;
+        flex-shrink: 0;
+        text-align: center;
+        /*width: 50%;*/
+        align-self: start;
+    }
+    .item-pass > div{
+    	height: .4rem;
+    	line-height: .4rem;
+    	background-color: #D6EFF4;
+    }
+    .item-pass > div:not(:last-child){
+    	/*border-bottom: .03rem solid #ffffff;*/
+    	margin-bottom: .02rem;
+    }
+
+    .top-head{
+    	display: flex;
+    	align-items: center;
+    	justify-content: space-between;
+    	font-size: .2rem;
+	    background: #1D689F;
+	    color: #ffffff;
+    }
+    .bottom-info{
+    	/*width: 96vw;*/
+    	margin: 0 .15rem;
+    	display: flex;
+    	align-items: center;
+    	justify-content: center;
+    	background: rgb(228, 117, 24);
+		background: -moz-linear-gradient(270deg, rgb(228, 117, 24) 30%, rgb(245, 142, 39) 70%);
+		background: -webkit-linear-gradient(270deg, rgb(228, 117, 24) 30%, rgb(245, 142, 39) 70%);
+		background: -o-linear-gradient(270deg, rgb(228, 117, 24) 30%, rgb(245, 142, 39) 70%);
+		background: -ms-linear-gradient(270deg, rgb(228, 117, 24) 30%, rgb(245, 142, 39) 70%);
+		background: linear-gradient(0deg, rgb(228, 117, 24) 30%, rgb(245, 142, 39) 70%);
+    	color: #ffffff;
+    	font-size: .2rem;
+    	height: .4rem;
+    }
+    .info-item-con .btn-login { 
+    	color: #fff;
+    	border:none;
+    	display: block;
+    	width: 100%;
+        justify-content: center;
+        align-items: center; 
+        margin:.2rem 0;
+        font-size: .2rem;
+    	height: .35rem;
+    	line-height: .35rem; 
+        width: 100%;
+        background: rgb(228, 117, 24);
+		background: -moz-linear-gradient(270deg, rgb(228, 117, 24) 30%, rgb(245, 142, 39) 70%);
+		background: -webkit-linear-gradient(270deg, rgb(228, 117, 24) 30%, rgb(245, 142, 39) 70%);
+		background: -o-linear-gradient(270deg, rgb(228, 117, 24) 30%, rgb(245, 142, 39) 70%);
+		background: -ms-linear-gradient(270deg, rgb(228, 117, 24) 30%, rgb(245, 142, 39) 70%);
+		background: linear-gradient(0deg, rgb(228, 117, 24) 30%, rgb(245, 142, 39) 70%); 
+		border:none;
+	}
+
+	 .info-item-con form { width: 100%; }
+	 .info-item-con input { display: block; width: 100%; height: .3rem; line-height: .3rem; border:#ccc solid 2px;   border-radius: .03rem;  margin: .2rem 0;     }
+    .item-active { background: red; }
+    .swiper-container { 
+      width: 100%;
+      height: 100%;
+    }
+    .swiper-slide { 
+    	overflow: hidden;
+    	height: 100%;
+    }
+
+    .img { width: 100%; }
+
+
+    </style>
+</head>
+
+<body>
+<p>
+    <xmp id="show">
+    </xmp>
+</p>
+    <div id="app">
+        <div class="top-head">
+            <div style="flex-grow: 1;flex-shrink: 0;text-align: center;text-align: left;text-indent: .2rem;">爱尔logo</div>
+            <div style="font-size: .3rem;font-weight: bold;padding: .05rem;flex-grow: 1;flex-shrink: 0;text-align: center;"> 登陆 </div>
+            <div style="font-size: .12rem;flex-grow: 1;flex-shrink: 0;text-align: center;text-align: right;margin-right: .2rem;">
+                <div>{{formatDate}}</div>
+                <div>{{formatTime}}</div>
+            </div>
+        </div>
+
+		<div class="main-info">
+        
+            <div class="info-item-con">
+                    
+					       
+				     <input type="submit" class="btn-1" v-on:click="saveToken" value="保存token"> 
+                      <input type="submit" class="btn-1" v-on:click="getToken" value="读取token"> 
+                       <input type="submit" class="btn-1" v-on:click="TTsCall" value="语音调用"> 
+                        <input type="submit" class="btn-1" v-on:click="TTsEvt" value="语音调用状态"> 
+
+					  
+            </div>
+            <div>
+                  --- 收到消息 ----
+                        <p>{{ message }}</p>
+
+            </div>
+        </div>
+     
+        
+        
+
+   
+    </div>
+</body>
+<script src="https://cdn.bootcss.com/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.24.0/locale/zh-cn.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+ 
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/vant@2.0/lib/vant.min.js"></script> -->
+<script>
+var Vue = window.Vue;
+// var vant = window.vant; 
+// 注册组件
+// Vue.use(vant);
+
+// 调用函数式组件
+// vant.Toast('提示');
+
+
+alert("1111111111");
+
+
+new Vue({
+    el: '#app',
+    mounted() {
+        setInterval(() => {
+            this.dateTime = moment().format('ll,dddd LTS');
+        }, 1000); 
+        var self = this;
+        window.onMsg = function (msg) { 
+            self.onMsg(msg);
+        }
+
+        setTimeout(function () { 
+                window.onMsg("测试消息 ");
+        },2000);
+  
+    },
+    methods: { 
+        saveToken : function () { 
+            // app 提供是 store 类存储 token 
+            <!--window.Store.save("token","test_token_id_001");-->
+
+            //调用java方法
+            window.WebViewJavascriptBridge.callHandler(
+                'save'
+                , {'token': 'test_token_id_001'}
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "收到java save反馈 = " + responseData
+                }
+            );
+
+
+        },
+        getToken  : function () { 
+            // app 提供是 store  
+            <!--window.Store.get("token");-->
+            //调用java方法
+            window.WebViewJavascriptBridge.callHandler(
+                'get'
+                , ""
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "收到java get反馈 = " + responseData
+                }
+            );
+        },
+        TTsCall :function () { 
+            <!--window.TTs.say("请某患者到某诊室就诊");-->
+
+            //调用java方法
+            window.WebViewJavascriptBridge.callHandler(
+                'TTs'
+                , "请某患者到某诊室就诊"
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "收到java TTs = " + responseData
+                }
+            );
+        },
+        TTsEvt :function () { 
+            alert( window.TTs.evt);
+        },
+        onMsg :function (msg) { 
+            this.message = msg
+        }
+
+ 
+
+
+    },
+    computed: {
+        formatDate() {
+            if (this.dateTime) {
+                return this.dateTime.split(',')[0];
+            }
+        },
+        formatTime() {
+            if (this.dateTime) {
+                return this.dateTime.split(',')[1];
+            }
+        }
+    },
+    data: function() {
+        return {
+            dateTime: moment().format('ll,dddd LTS') ,
+            message : "收到服务消息"
+         
+        }
+    }
+})
+</script>
+<script type="text/javascript"> 
+
+! function(e, t) {
+    function n() { t.body ? t.body.style.fontSize = 12 * o + "px" : t.addEventListener("DOMContentLoaded", n) }
+
+    function d() {
+        var e = i.clientWidth / 10;
+        i.style.fontSize = e + "px"
+    }
+    var i = t.documentElement,
+        o = e.devicePixelRatio || 1;
+    if (n(), d(), e.addEventListener("resize", d), e.addEventListener("pageshow", function(e) { e.persisted && d() }), o >= 2) {
+        var a = t.createElement("body"),
+            s = t.createElement("div");
+        s.style.border = ".5px solid transparent", a.appendChild(s), i.appendChild(a), 1 === s.offsetHeight && i.classList.add("hairlines"), i.removeChild(a)
+    }
+}(window, document);
+</script>
+
+</html>
