@@ -70,7 +70,7 @@ public class MainActivity extends Activity{
         //
         //webView.send("xxx");
 
-        webView.loadUrl("file:///android_asset/test.html");
+        webView.loadUrl("file:///android_asset/demo.html");
 
         webView.registerHandler("save", new BridgeHandler() {
 
@@ -102,6 +102,14 @@ public class MainActivity extends Activity{
 
         });
 
+        webView.registerHandler("onSocketMsg", new BridgeHandler() {
+            @Override
+            public void handler(String data, CallBackFunction function) {
+                Log.i(TAG, "handler = onSocketMsg, data To web = " + data);
+                function.onCallBack("收到服务端消息");
+            }
+
+        });
 	}
 
 }
