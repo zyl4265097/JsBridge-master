@@ -18,6 +18,10 @@ import com.github.lzyzsd.jsbridge.BridgeHandler;
 import com.github.lzyzsd.jsbridge.BridgeWebView;
 import com.github.lzyzsd.jsbridge.CallBackFunction;
 import com.github.lzyzsd.jsbridge.DefaultHandler;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends Activity{
 
@@ -55,22 +59,16 @@ public class MainActivity extends Activity{
         //
 		//});
         //
-        //User user = new User();
-        //Location location = new Location();
-        //location.address = "SDU";
-        //user.location = location;
-        //user.name = "大头鬼";
-        //
-        //webView.callHandler("functionInJs", new Gson().toJson(user), new CallBackFunction() {
-        //    @Override
-        //    public void onCallBack(String data) {
-        //        System.out.println("callHandler data ="+data);
-        //    }
-        //});
+//        User user = new User();
+//        Location location = new Location();
+//        location.address = "SDU";
+//        user.location = location;
+//        user.name = "大头鬼";
+
         //
         //webView.send("xxx");
 
-        webView.loadUrl("file:///android_asset/demo.html");
+        webView.loadUrl("file:///android_asset/test.html");
 
         webView.registerHandler("save", new BridgeHandler() {
 
@@ -102,14 +100,17 @@ public class MainActivity extends Activity{
 
         });
 
-        webView.registerHandler("onSocketMsg", new BridgeHandler() {
+       // 调用前端 js 方法 发送 socket 消息 
+        webView.callHandler("onSocketMsg","测试服务器消息asdfasdfasdf" , new CallBackFunction() {
             @Override
-            public void handler(String data, CallBackFunction function) {
-                Log.i(TAG, "handler = onSocketMsg, data To web = " + data);
-                function.onCallBack("收到服务端消息");
+            public void onCallBack(String data) {
+                System.out.println("callHandler data ="+data);
             }
-
         });
+
+
+
+
 	}
 
 }

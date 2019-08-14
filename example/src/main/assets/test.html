@@ -221,10 +221,35 @@ var Vue = window.Vue;
 
 // 调用函数式组件
 // vant.Toast('提示');
+ function connectWebViewJavascriptBridge(callback) {
+        if (window.WebViewJavascriptBridge) {
+            callback(WebViewJavascriptBridge)
+        } else {
+            document.addEventListener(
+                'WebViewJavascriptBridgeReady'
+                , function() {
+                    callback(WebViewJavascriptBridge)
+                },
+                false
+            );
+        }
+ }
+ //注册 js 方法  onSocketMsg
+ connectWebViewJavascriptBridge(function(bridge) {
+     window.WebViewJavascriptBridge.registerHandler("onSocketMsg", function(data, responseCallback) {
+        document.getElementById("show").innerHTML = ("data from Java: = " + data);
+        var responseData = "Javascript Says Right back aka!";
+        responseCallback(responseData);
+    });
+
+ });
 
 
-alert("1111111111");
 
+/*
+
+
+*/
 
 new Vue({
     el: '#app',
@@ -232,6 +257,9 @@ new Vue({
         setInterval(() => {
             this.dateTime = moment().format('ll,dddd LTS');
         }, 1000); 
+
+        console.log(window.WebViewJavascriptBridge);
+
         var self = this;
         window.onMsg = function (msg) { 
             self.onMsg(msg);
@@ -246,6 +274,10 @@ new Vue({
         saveToken : function () { 
             // app 提供是 store 类存储 token 
             <!--window.Store.save("token","test_token_id_001");-->
+
+            console.log(window.WebViewJavascriptBridge);
+            document.getElementById("show").innerHTML = window.WebViewJavascriptBridge;
+            return;
 
             //调用java方法
             window.WebViewJavascriptBridge.callHandler(
