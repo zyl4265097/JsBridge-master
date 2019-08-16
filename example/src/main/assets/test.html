@@ -185,17 +185,15 @@
 		<div class="main-info">
         
             <div class="info-item-con">
-                    
-					       
+
+                  ---------------- 请在 iis 中修改  这里会被IIS 中的文件 覆盖  ---------------------
 				     <input type="submit" class="btn-1" v-on:click="saveToken" value="保存token"> 
                       <input type="submit" class="btn-1" v-on:click="getToken" value="读取token"> 
                        <input type="submit" class="btn-1" v-on:click="TTsCall" value="语音调用"> 
-                        <input type="submit" class="btn-1" v-on:click="TTsEvt" value="语音调用状态"> 
-
-					  
+                        <input type="submit" class="btn-1" v-on:click="TTsEvt" value="语音调用状态">
             </div>
             <div>
-                  --- 收到消息 ----
+                    ----- 收到消息 ----
                         <p>{{ message }}</p>
 
             </div>

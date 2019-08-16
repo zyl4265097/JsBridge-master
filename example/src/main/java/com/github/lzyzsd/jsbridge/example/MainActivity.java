@@ -68,8 +68,10 @@ public class MainActivity extends Activity{
         //
         //webView.send("xxx");
 
-        webView.loadUrl("file:///android_asset/test.html");
+        // webView.loadUrl("file:///android_asset/test.html");
 
+        webView.loadUrl("http://192.168.242.1/android_webview/test.html");
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.registerHandler("save", new BridgeHandler() {
 
         	@Override
@@ -100,7 +102,7 @@ public class MainActivity extends Activity{
 
         });
 
-       // 调用前端 js 方法 发送 socket 消息 
+       // 调用前端 js 方法 发送 socket 消息
         webView.callHandler("onSocketMsg","测试服务器消息asdfasdfasdf" , new CallBackFunction() {
             @Override
             public void onCallBack(String data) {
