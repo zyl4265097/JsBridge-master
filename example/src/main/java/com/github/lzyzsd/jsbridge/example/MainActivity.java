@@ -6,8 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Window;
@@ -24,6 +22,13 @@ import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.util.ResourceUtil;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity {
 
@@ -34,6 +39,8 @@ public class MainActivity extends Activity {
     private SpeechSynthesizer mTts;
     private Toast mToast;
     public static String voicerLocal = "xiaofeng";
+    private static Socket socket;
+    private boolean isOnAttacheWindow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +50,6 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-
-        //权限请求
-        requestPermissions();
-
-        //初始化webview相关
-        initWebView();
 
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
@@ -267,6 +268,107 @@ public class MainActivity extends Activity {
         return tempBuffer.toString();
     }
 
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        isOnAttacheWindow = true;
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(isOnAttacheWindow ){
+            isOnAttacheWindow = false;
+            //这里才代表view的xml加载完了，可以安全的操作主线程了
+            //权限请求
+            requestPermissions();
+
+            //初始化webview相关
+            initWebView();
+
+            try {
+                connectSocketIO();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void connectSocketIO() throws URISyntaxException, JSONException {
+        IO.Options options = new IO.Options();
+        options.transports = new String[]{"websocket"};//,"xhr-polling","jsonp-polling"
+        options.reconnectionAttempts = 2;     // 重连尝试次数
+        options.reconnectionDelay = 5000;     // 失败重连的时间间隔(ms)
+        options.timeout = 20000;              // 连接超时时间(ms)
+        options.forceNew = true;
+        options.query = "token=a1ec8386f2bda4f995191aef3f020f53&appCode=outp-1-1001";
+        socket = IO.socket("http://220.168.30.123:18021", options);
+        //socket = IO.socket("http://localhost:8021", options);
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                for (Object o : args) {
+                    System.out.println("socket.on = "+o);
+                }
+
+            }
+        }).on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.d("Socket","Socket.EVENT_CONNECT_ERROR = "+args.toString());
+                socket.disconnect();
+            }
+        }).on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.d("Socket","Socket.EVENT_CONNECT_TIMEOUT");
+                socket.disconnect();
+            }
+        }).on(Socket.EVENT_PING, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.d("Socket","Socket.EVENT_PING");
+            }
+        }).on(Socket.EVENT_PONG, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.d("Socket","Socket.EVENT_PONG");
+            }
+        }).on(Socket.EVENT_MESSAGE, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.d("Socket","-----------接受到消息啦--------" + Arrays.toString(args));
+            }
+        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.d("Socket","客户端断开连接啦。。。");
+                socket.disconnect();
+            }
+        });
+        socket.connect();
+        //给所有客户端广播消息
+        //socket.emit(Constants.BROADCAST_KEY,"{data:\"hello,all\"}");
+        //加入房间（分组）
+        //socket.emit(Constants.ROOM_CHAT_KEY, "1081262");
+
+        //MessageInfo sendData = new MessageInfo();
+        ////		sendData.setSourceSessionId("12");
+        ////		sendData.setTargetSessionId("12");
+        //sendData.setMsg("客户端发送的消息");
+        //
+        //socket.send(JsonConverterUtils.objectToJSONObject(sendData));
+
+        JSONObject obj = new JSONObject();
+        obj.put(Socket.EVENT_MESSAGE,"客户端发送消息");
+        socket.send(obj);
+    }
+
+    /**
+     * 6.0以上请求权限
+     */
     private void requestPermissions(){
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
