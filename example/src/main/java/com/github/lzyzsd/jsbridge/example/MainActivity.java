@@ -65,9 +65,11 @@ public class MainActivity extends Activity {
 
         // webView.loadUrl("file:///android_asset/test.html");
 
-        // 本机虚拟机   webView.loadUrl("http://192.168.242.1/android_webview/test.html");
+        // 本机虚拟机
+        webView.loadUrl("http://10.203.2.144:8018");
+        // webView.loadUrl("http://192.168.242.1/android_webview/test.html");
         // aierit wifi
-         webView.loadUrl("http://10.203.2.144:8018");
+
         //  webView.loadUrl("http://10.201.12.158:8018");
 
         webView.getSettings().setJavaScriptEnabled(true);
@@ -76,6 +78,7 @@ public class MainActivity extends Activity {
             @Override
             public void handler(String data, CallBackFunction function) {
                 Log.i(TAG, "handler = save, data from web = " + data);
+                setToken(data);
                 function.onCallBack("存储token");
             }
         });
@@ -86,7 +89,8 @@ public class MainActivity extends Activity {
             public void handler(String data, CallBackFunction function) {
                 Log.i(TAG, "handler = get, data from web = " + data);
                 Log.i(TAG, "getToken = " + getToken());
-                function.onCallBack("获取token");
+                String token = getToken();
+                function.onCallBack(token);
             }
         });
 
@@ -96,7 +100,6 @@ public class MainActivity extends Activity {
             public void handler(String data, CallBackFunction function) {
                 Log.i(TAG, "handler = TTs, data from web = " + data);
                 tts();
-                setToken("1234");
                 function.onCallBack("TTs发音");
             }
         });
