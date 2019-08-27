@@ -60,7 +60,11 @@ public class MainActivity extends Activity {
 
         // webView.loadUrl("file:///android_asset/test.html");
 
-        webView.loadUrl("http://192.168.242.1/android_webview/test.html");
+        // 本机虚拟机   webView.loadUrl("http://192.168.242.1/android_webview/test.html");
+        // aierit wifi
+         webView.loadUrl("http://10.203.2.144:8018");
+        //  webView.loadUrl("http://10.201.12.158:8018");
+
         webView.getSettings().setJavaScriptEnabled(true);
         webView.registerHandler("save", new BridgeHandler() {
 

@@ -273,9 +273,6 @@ new Vue({
             // app 提供是 store 类存储 token 
             <!--window.Store.save("token","test_token_id_001");-->
 
-            console.log(window.WebViewJavascriptBridge);
-            document.getElementById("show").innerHTML = window.WebViewJavascriptBridge;
-            return;
 
             //调用java方法
             window.WebViewJavascriptBridge.callHandler(
@@ -339,7 +336,6 @@ new Vue({
         return {
             dateTime: moment().format('ll,dddd LTS') ,
             message : "收到服务消息"
-         
         }
     }
 })
