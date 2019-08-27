@@ -2,6 +2,8 @@ package com.github.lzyzsd.jsbridge.example;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +30,6 @@ import io.socket.emitter.Emitter;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MainActivity extends Activity {
 
@@ -41,6 +42,7 @@ public class MainActivity extends Activity {
     public static String voicerLocal = "xiaofeng";
     private static Socket socket;
     private boolean isOnAttacheWindow = false;
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,8 @@ public class MainActivity extends Activity {
 
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
+        //初始化sharepreference,应用内数据保存
+        sp = getSharedPreferences("date", Context.MODE_PRIVATE);
     }
 
     private void initWebView() {
@@ -75,6 +79,7 @@ public class MainActivity extends Activity {
             @Override
             public void handler(String data, CallBackFunction function) {
                 Log.i(TAG, "handler = get, data from web = " + data);
+                Log.i(TAG, "getToken = " + getToken());
                 function.onCallBack("获取token");
             }
         });
@@ -85,6 +90,7 @@ public class MainActivity extends Activity {
             public void handler(String data, CallBackFunction function) {
                 Log.i(TAG, "handler = TTs, data from web = " + data);
                 tts();
+                setToken("1234");
                 function.onCallBack("TTs发音");
             }
         });
@@ -296,6 +302,11 @@ public class MainActivity extends Activity {
         }
     }
 
+    /**
+     * 建立socket连接
+     * @throws URISyntaxException
+     * @throws JSONException
+     */
     private void connectSocketIO() throws URISyntaxException, JSONException {
         IO.Options options = new IO.Options();
         options.transports = new String[]{"websocket"};//,"xhr-polling","jsonp-polling"
@@ -303,48 +314,50 @@ public class MainActivity extends Activity {
         options.reconnectionDelay = 5000;     // 失败重连的时间间隔(ms)
         options.timeout = 20000;              // 连接超时时间(ms)
         options.forceNew = true;
-        options.query = "token=a1ec8386f2bda4f995191aef3f020f53&appCode=outp-1-1001";
+
+        options.query = "token=c45108ef2250b8a523952c841c78244b&appCode=outp-1-1002";
         socket = IO.socket("http://220.168.30.123:18021", options);
-        //socket = IO.socket("http://localhost:8021", options);
+
+        /*
+         * options.query = "token=c45108ef2250b8a523952c841c78244b&appCode=outp-1-1002";
+         * socket = IO.socket("http://localhost:8021", options);
+         */
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                for (Object o : args) {
-                    System.out.println("socket.on = "+o);
-                }
-
+                Log.d("socket call","Socket.CONNECT_SUCSSFUL");
             }
         }).on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.d("Socket","Socket.EVENT_CONNECT_ERROR = "+args.toString());
+                Log.d("socket call","Socket.EVENT_CONNECT_ERROR");
                 socket.disconnect();
             }
         }).on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.d("Socket","Socket.EVENT_CONNECT_TIMEOUT");
+                Log.d("socket call","Socket.EVENT_CONNECT_TIMEOUT");
                 socket.disconnect();
             }
         }).on(Socket.EVENT_PING, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.d("Socket","Socket.EVENT_PING");
+                Log.d("socket call","Socket.EVENT_PING");
             }
         }).on(Socket.EVENT_PONG, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.d("Socket","Socket.EVENT_PONG");
+                Log.d("socket call","Socket.EVENT_PONG");
             }
-        }).on(Socket.EVENT_MESSAGE, new Emitter.Listener() {
+        }).on("push_event", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.d("Socket","-----------接受到消息啦--------" + Arrays.toString(args));
+                Log.d("socket call","-----------接受到消息啦--------" + Arrays.toString(args));
             }
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.d("Socket","客户端断开连接啦。。。");
+                Log.d("socket call","客户端断开连接啦。。。");
                 socket.disconnect();
             }
         });
@@ -354,16 +367,24 @@ public class MainActivity extends Activity {
         //加入房间（分组）
         //socket.emit(Constants.ROOM_CHAT_KEY, "1081262");
 
-        //MessageInfo sendData = new MessageInfo();
-        ////		sendData.setSourceSessionId("12");
-        ////		sendData.setTargetSessionId("12");
-        //sendData.setMsg("客户端发送的消息");
-        //
-        //socket.send(JsonConverterUtils.objectToJSONObject(sendData));
+        MessageInfo sendData = new MessageInfo();
+        //		sendData.setSourceSessionId("12");
+        //		sendData.setTargetSessionId("12");
+        sendData.setMsg("客户端发送的消息");
 
-        JSONObject obj = new JSONObject();
-        obj.put(Socket.EVENT_MESSAGE,"客户端发送消息");
-        socket.send(obj);
+        socket.send(JsonConverterUtils.objectToJSONObject(sendData));
+    }
+
+    //读取token
+    public String getToken(){
+        return sp.getString("token","");
+    }
+
+    //这里使用的是 apply() 方法保存，将不会有返回值
+    public void setToken(String token){
+        SharedPreferences.Editor e = sp.edit();
+        e.putString("token",token);
+        e.commit();
     }
 
     /**
@@ -392,3 +413,4 @@ public class MainActivity extends Activity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
+
